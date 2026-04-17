@@ -70,6 +70,26 @@ h2 { font-size: 1.5rem; font-weight: 700; }
 
 .card-form label { font-size: 0.85rem; color: var(--text-muted); text-align: left; }
 
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-wrap input {
+  flex: 1;
+  padding-right: 4rem;
+}
+.btn-show {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--primary-light);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+}
+
 input[type="password"], input[type="text"] {
   width: 100%;
   background: var(--surface2);

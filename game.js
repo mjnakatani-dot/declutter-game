@@ -29,6 +29,13 @@ function toast(msg) {
 }
 
 // ── Screen 1: API Key ──────────────────────────────────
+document.getElementById('btn-show-key').addEventListener('click', () => {
+  const input = document.getElementById('api-key');
+  const btn = document.getElementById('btn-show-key');
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '隠す'; }
+  else { input.type = 'password'; btn.textContent = '表示'; }
+});
+
 document.getElementById('btn-api').addEventListener('click', () => {
   const val = document.getElementById('api-key').value.trim();
   if (!val.startsWith('sk-ant-')) { toast('APIキーが正しくありません'); return; }
