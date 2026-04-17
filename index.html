@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>断捨離ゲーム</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Screen 1: APIキー入力 -->
+  <div id="screen-api" class="screen active">
+    <div class="screen-inner">
+      <div class="logo">🏠</div>
+      <h1>断捨離ゲーム</h1>
+      <p class="subtitle">部屋を撮影して、モノを手放すゲーム</p>
+      <div class="card-form">
+        <label for="api-key">Claude APIキー</label>
+        <input type="password" id="api-key" placeholder="sk-ant-..." autocomplete="off">
+        <button id="btn-api" class="btn-primary">はじめる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 2: 画像アップロード -->
+  <div id="screen-upload" class="screen">
+    <div class="screen-inner">
+      <h2>部屋を撮影しよう</h2>
+      <p class="subtitle">片付けたい場所を撮影してください</p>
+      <div id="upload-area" class="upload-area">
+        <div class="upload-icon">📷</div>
+        <p>タップして写真を選択</p>
+        <input type="file" id="file-input" accept="image/*" capture="environment">
+      </div>
+      <img id="preview-img" class="preview-img hidden" alt="プレビュー">
+      <button id="btn-analyze" class="btn-primary hidden">AIに解析してもらう 🔍</button>
+    </div>
+  </div>
+
+  <!-- Screen 3: ローディング -->
+  <div id="screen-loading" class="screen">
+    <div class="screen-inner">
+      <div class="loading-animation">
+        <div class="spinner"></div>
+        <div class="loading-icons">🔍</div>
+      </div>
+      <h2>部屋を解析中…</h2>
+      <p class="subtitle" id="loading-msg">AIがモノを認識しています</p>
+    </div>
+  </div>
+
+  <!-- Screen 4: スワイプゲーム -->
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <div class="stat">
+        <span class="stat-icon">🗑</span>
+        <span id="count-discard">0</span>
+      </div>
+      <div class="progress-wrap">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">✨</span>
+        <span id="count-keep">0</span>
+      </div>
+    </div>
+
+    <div class="card-stack" id="card-stack">
+      <!-- カードはJSで生成 -->
+    </div>
+
+    <div class="swipe-hint">
+      <span class="hint-left">← 捨てる</span>
+      <span class="hint-right">残す →</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-action btn-discard" id="btn-discard" title="捨てる">🗑</button>
+      <button class="btn-action btn-keep" id="btn-keep" title="残す">✨</button>
+    </div>
+  </div>
+
+  <!-- Screen 5: 結果 -->
+  <div id="screen-result" class="screen">
+    <div class="screen-inner">
+      <div class="result-emoji" id="result-emoji">🎉</div>
+      <h2 id="result-title">断捨離完了！</h2>
+      <p id="result-msg" class="subtitle"></p>
+
+      <div class="result-stats">
+        <div class="result-stat">
+          <span class="result-stat-num" id="res-discard">0</span>
+          <span class="result-stat-label">捨てた</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-num" id="res-keep">0</span>
+          <span class="result-stat-label">残した</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-num" id="res-score">0</span>
+          <span class="result-stat-label">スコア</span>
+        </div>
+      </div>
+
+      <div id="discard-list-wrap" class="discard-list-wrap">
+        <h3>手放したもの</h3>
+        <ul id="discard-list"></ul>
+      </div>
+
+      <button id="btn-restart" class="btn-primary">もう一度遊ぶ</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
