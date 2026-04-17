@@ -114,8 +114,9 @@ async function analyzeImage() {
     },
   ];
 
+  let res;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'x-api-key': state.apiKey,
@@ -129,21 +130,31 @@ async function analyzeImage() {
         messages: msgs,
       }),
     });
+  } catch (fetchErr) {
+    console.error('fetch error:', fetchErr);
+    toast('通信エラー: ' + (fetchErr.message || fetchErr.name || String(fetchErr)));
+    showScreen('screen-upload');
+    return;
+  }
 
+  try {
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
+      const errData = await res.json();
+      throw new Error(errData.error?.message || 'HTTP ' + res.status);
     }
 
     const data = await res.json();
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      throw new Error('APIレスポンスが不正です: ' + JSON.stringify(data).slice(0, 100));
+    }
     const text = data.content[0].text.trim();
 
     let parsed;
     try {
       parsed = JSON.parse(text);
-    } catch {
+    } catch (parseErr) {
       const match = text.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error('JSONの解析に失敗しました');
+      if (!match) throw new Error('JSON解析失敗: ' + text.slice(0, 80));
       parsed = JSON.parse(match[0]);
     }
 
@@ -157,8 +168,8 @@ async function analyzeImage() {
     state.discarded = [];
     startGame();
   } catch (err) {
-    console.error(err);
-    toast('エラー: ' + err.message);
+    console.error('processing error:', err);
+    toast('エラー: ' + (err.message || String(err)));
     showScreen('screen-upload');
   }
 }
