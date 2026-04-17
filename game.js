@@ -139,13 +139,15 @@ async function analyzeImage() {
 
   try {
     if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.error?.message || 'HTTP ' + res.status);
+      let errMsg = 'HTTP ' + res.status;
+      try { const e = await res.json(); errMsg = e.error?.message || errMsg; } catch (e2) {}
+      throw new Error(errMsg);
     }
 
-    const data = await res.json();
+    let data;
+    try { data = await res.json(); } catch (e) { throw new Error('レスポンス解析失敗'); }
     if (!data.content || !data.content[0] || !data.content[0].text) {
-      throw new Error('APIレスポンスが不正です: ' + JSON.stringify(data).slice(0, 100));
+      throw new Error('APIレスポンスが不正: ' + JSON.stringify(data).slice(0, 120));
     }
     const text = data.content[0].text.trim();
 
